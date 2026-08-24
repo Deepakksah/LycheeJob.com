@@ -62,7 +62,12 @@ else
 // HttpClient for Geocoding
 builder.Services.AddHttpClient<IGeocodingService, GeocodingService>();
 
-// Register Job Source Providers
+// HttpClients for Real Job Source Providers
+builder.Services.AddHttpClient<RemoteOkProvider>();
+builder.Services.AddHttpClient<RemotiveProvider>();
+builder.Services.AddHttpClient<AdzunaProvider>();
+
+// Register Job Source Providers (demo/seed data)
 builder.Services.AddScoped<IJobSourceProvider, IndeedProvider>();
 builder.Services.AddScoped<IJobSourceProvider, LinkedInProvider>();
 builder.Services.AddScoped<IJobSourceProvider, NaukriProvider>();
@@ -70,6 +75,11 @@ builder.Services.AddScoped<IJobSourceProvider, FounditProvider>();
 builder.Services.AddScoped<IJobSourceProvider, InternshalaProvider>();
 builder.Services.AddScoped<IJobSourceProvider, GovernmentJobsProvider>();
 builder.Services.AddScoped<IJobSourceProvider, CustomJobApiProvider>();
+
+// Register REAL Live Job Source Providers
+builder.Services.AddScoped<IJobSourceProvider, RemoteOkProvider>();
+builder.Services.AddScoped<IJobSourceProvider, RemotiveProvider>();
+builder.Services.AddScoped<IJobSourceProvider, AdzunaProvider>(); // 750+ Indian jobs
 
 // Register Application Services
 builder.Services.AddScoped<IJobService, JobService>();

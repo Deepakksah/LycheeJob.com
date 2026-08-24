@@ -226,7 +226,10 @@ namespace JobPortal.Infrastructure.Services
                     new JobSource { Name = "Foundit", SourceType = "PublicFeed", IsActive = true },
                     new JobSource { Name = "Internshala", SourceType = "PartnerFeed", IsActive = true },
                     new JobSource { Name = "GovernmentJobs", SourceType = "OfficialApi", IsActive = true },
-                    new JobSource { Name = "CustomJobApi", SourceType = "CustomApi", IsActive = true }
+                    new JobSource { Name = "CustomJobApi", SourceType = "CustomApi", IsActive = true },
+                    new JobSource { Name = "Adzuna", SourceType = "OfficialApi", IsActive = true },
+                    new JobSource { Name = "RemoteOK", SourceType = "PublicFeed", IsActive = true },
+                    new JobSource { Name = "Remotive", SourceType = "PublicFeed", IsActive = true },
                 };
 
                 await _db.JobSources.AddRangeAsync(sources, cancellationToken);

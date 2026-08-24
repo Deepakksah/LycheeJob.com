@@ -19,10 +19,13 @@ export const JobInfoWindow: React.FC<JobInfoWindowProps> = ({
   onClose,
   onSelectJob
 }) => {
-  const [imgSrc, setImgSrc] = useState<string>(
-    getExactCompanyLogoUrl(job.company.name, job.company.website, job.company.logoUrl)
-  );
-  const [imgFailed, setImgFailed] = useState<boolean>(false);
+  const logoUrl = getExactCompanyLogoUrl(job.company.name, job.company.website, job.company.logoUrl);
+  const backupUrl = getBackupGoogleFaviconUrl(job.company.name, job.company.website);
+  const [hasError, setHasError] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    setHasError(false);
+  }, [job.id, job.company.name]);
 
   const getInitials = (name: string) =>
     name
@@ -31,15 +34,6 @@ export const JobInfoWindow: React.FC<JobInfoWindowProps> = ({
       .join('')
       .substring(0, 2)
       .toUpperCase();
-
-  const handleImgError = () => {
-    const backup = getBackupGoogleFaviconUrl(job.company.name, job.company.website);
-    if (imgSrc !== backup) {
-      setImgSrc(backup);
-    } else {
-      setImgFailed(true);
-    }
-  };
 
   const citySlug = (job.city || 'india').toLowerCase().replace(/[^a-z0-9]/g, '-');
   const titleSlug = job.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -59,12 +53,19 @@ export const JobInfoWindow: React.FC<JobInfoWindowProps> = ({
       {/* Header with Company Logo */}
       <div className="flex items-center gap-3 pr-6 pb-3 border-b border-slate-100">
         <div className="w-11 h-11 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 border border-slate-200 overflow-hidden shadow-sm">
-          {!imgFailed && imgSrc ? (
+          {!hasError ? (
             <img
-              src={imgSrc}
+              src={logoUrl}
               alt={job.company.name}
               className="w-full h-full object-contain"
-              onError={handleImgError}
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (target.src !== backupUrl) {
+                  target.src = backupUrl;
+                } else {
+                  setHasError(true);
+                }
+              }}
             />
           ) : (
             <span className="text-rose-600 font-extrabold text-xs">

@@ -21,10 +21,13 @@ export const JobCard: React.FC<JobCardProps> = ({
   onSelect,
   onToggleSave
 }) => {
-  const [imgSrc, setImgSrc] = useState<string>(
-    getExactCompanyLogoUrl(job.company.name, job.company.website, job.company.logoUrl)
-  );
-  const [imgFailed, setImgFailed] = useState<boolean>(false);
+  const logoUrl = getExactCompanyLogoUrl(job.company.name, job.company.website, job.company.logoUrl);
+  const backupUrl = getBackupGoogleFaviconUrl(job.company.name, job.company.website);
+  const [hasError, setHasError] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    setHasError(false);
+  }, [job.id, job.company.name]);
 
   const getCompanyInitials = (name: string) => {
     return name
@@ -57,15 +60,6 @@ export const JobCard: React.FC<JobCardProps> = ({
     return 'bg-slate-100 text-slate-700 border-slate-200';
   };
 
-  const handleImgError = () => {
-    const backup = getBackupGoogleFaviconUrl(job.company.name, job.company.website);
-    if (imgSrc !== backup) {
-      setImgSrc(backup);
-    } else {
-      setImgFailed(true);
-    }
-  };
-
   const salaryTag = formatSalaryShort();
   const badgeStyle = getSourceBadgeStyle(job.sourceName);
 
@@ -85,12 +79,19 @@ export const JobCard: React.FC<JobCardProps> = ({
           
           {/* Logo / Initials Badge */}
           <div className="w-8 h-8 rounded-lg bg-white p-0.5 flex items-center justify-center shrink-0 border border-slate-200 shadow-sm overflow-hidden group-hover:scale-105 transition duration-200">
-            {!imgFailed && imgSrc ? (
+            {!hasError ? (
               <img
-                src={imgSrc}
+                src={logoUrl}
                 alt={job.company.name}
                 className="w-full h-full object-contain"
-                onError={handleImgError}
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src !== backupUrl) {
+                    target.src = backupUrl;
+                  } else {
+                    setHasError(true);
+                  }
+                }}
               />
             ) : (
               <span className="text-rose-600 font-extrabold text-[11px]">

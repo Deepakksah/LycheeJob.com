@@ -212,7 +212,7 @@ export default async function JobDetailsPage({ params }: PageProps) {
           )}
 
           {/* Walk-in Interview Details */}
-          {job.interviewDate && (
+          {job.interviewDate && !isNaN(new Date(job.interviewDate).getTime()) && (
             <div className="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-amber-900 space-y-2">
               <div className="flex items-center gap-2 font-bold text-sm text-amber-800">
                 <Calendar className="w-4 h-4 text-amber-600" />
