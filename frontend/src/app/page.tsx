@@ -136,9 +136,9 @@ export default function AppLayoutPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-sans">
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-50 text-slate-900 font-sans">
       
-      {/* 1. SINGLE UNIFIED COMPACT TOP HEADER */}
+      {/* 1. SINGLE UNIFIED COMPACT TOP HEADER - LYCHEE THEME */}
       <Header
         savedCount={savedJobIds.length}
         initialKeyword={filters.keyword}
@@ -157,8 +157,8 @@ export default function AppLayoutPage() {
         
         {/* LEFT PANEL: JOB LIST CARDS */}
         <div
-          className={`h-full bg-slate-900/90 border-r border-slate-800 transition-all duration-300 flex flex-col ${
-            isSidebarOpen ? 'w-full lg:w-[380px] shrink-0' : 'w-0 overflow-hidden border-none'
+          className={`h-full bg-white border-r border-rose-100 transition-all duration-300 flex flex-col shadow-sm ${
+            isSidebarOpen ? 'w-full lg:w-[390px] shrink-0' : 'w-0 overflow-hidden border-none'
           } ${mobileView === 'list' ? 'block' : 'hidden lg:block'}`}
         >
           <div className="p-3 flex-1 overflow-y-auto scrollbar-thin">
@@ -188,20 +188,20 @@ export default function AppLayoutPage() {
           {!isSidebarOpen && (
             <button
               onClick={() => setIsSidebarOpen(true)}
-              className="absolute top-4 left-4 z-20 bg-slate-900/90 hover:bg-blue-600 text-white p-2.5 rounded-xl shadow-2xl border border-slate-700 hidden lg:flex items-center gap-2 text-xs font-bold transition backdrop-blur-md"
+              className="absolute top-4 left-4 z-20 bg-white hover:bg-rose-50 text-slate-800 p-2.5 rounded-xl shadow-xl border border-slate-200 hidden lg:flex items-center gap-2 text-xs font-bold transition backdrop-blur-md"
               title="Expand Job List"
             >
-              <PanelLeftOpen className="w-4 h-4 text-blue-400" />
+              <PanelLeftOpen className="w-4 h-4 text-rose-600" />
               <span>Show Job Cards ({totalJobs})</span>
             </button>
           )}
 
           {/* Floating Mobile View Switcher */}
-          <div className="absolute top-4 left-4 z-20 flex lg:hidden items-center bg-slate-900/90 p-1 rounded-xl border border-slate-700 shadow-2xl backdrop-blur-md text-xs font-bold">
+          <div className="absolute top-4 left-4 z-20 flex lg:hidden items-center bg-white p-1 rounded-xl border border-slate-200 shadow-xl backdrop-blur-md text-xs font-bold">
             <button
               onClick={() => setMobileView('list')}
               className={`px-3 py-1 rounded-lg flex items-center gap-1 transition ${
-                mobileView === 'list' ? 'bg-blue-600 text-white' : 'text-slate-400'
+                mobileView === 'list' ? 'bg-rose-600 text-white' : 'text-slate-600'
               }`}
             >
               <ListFilter className="w-3.5 h-3.5" />
@@ -210,7 +210,7 @@ export default function AppLayoutPage() {
             <button
               onClick={() => setMobileView('map')}
               className={`px-3 py-1 rounded-lg flex items-center gap-1 transition ${
-                mobileView === 'map' ? 'bg-blue-600 text-white' : 'text-slate-400'
+                mobileView === 'map' ? 'bg-rose-600 text-white' : 'text-slate-600'
               }`}
             >
               <Map className="w-3.5 h-3.5" />

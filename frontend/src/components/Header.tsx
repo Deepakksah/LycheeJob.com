@@ -87,30 +87,32 @@ export const Header: React.FC<UnifiedHeaderProps> = ({
   };
 
   return (
-    <header className="relative bg-slate-950/90 border-b border-slate-800/80 sticky top-0 z-40 backdrop-blur-xl shadow-2xl">
+    <header className="relative bg-white/95 border-b border-rose-100 sticky top-0 z-40 backdrop-blur-xl shadow-md">
       
-      {/* Vibrant Top Rainbow Glow Bar */}
-      <div className="h-0.5 w-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-rose-500 opacity-90" />
+      {/* Lychee Crimson Rainbow Bar */}
+      <div className="h-1 w-full bg-gradient-to-r from-rose-600 via-pink-500 to-amber-500 opacity-95" />
 
       <div className="max-w-[1920px] mx-auto px-3 py-2 space-y-2">
         
-        {/* ROW 1: Brand Logo + Search Controls + Action Buttons */}
+        {/* ROW 1: Lychee Logo + Light Search Controls + Action Buttons */}
         <div className="flex items-center justify-between gap-3">
           
-          {/* Brand Logo */}
+          {/* Lychee Brand Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0 group">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition duration-200">
-              <MapPin className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-rose-600 via-rose-500 to-pink-500 flex items-center justify-center shadow-md shadow-rose-500/30 group-hover:scale-105 transition duration-200">
+              <MapPin className="w-4.5 h-4.5 text-white" />
             </div>
             <div className="hidden sm:block">
-              <span className="text-base font-extrabold text-white tracking-tight flex items-center gap-1">
-                MapJob<span className="bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">Hub</span>
+              <span className="text-base font-black tracking-tight flex items-center">
+                <span className="text-rose-600">Lychee</span>
+                <span className="text-slate-900 font-extrabold">Job</span>
+                <span className="text-rose-500 text-xs font-bold font-mono">.com</span>
               </span>
             </div>
           </Link>
 
           {/* Inline Search Bar */}
-          <form onSubmit={handleSubmit} className="flex-1 max-w-4xl flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800/80 shadow-inner">
+          <form onSubmit={handleSubmit} className="flex-1 max-w-4xl flex items-center gap-1.5 bg-slate-50 p-1.5 rounded-xl border border-rose-200/80 shadow-inner">
             
             {/* Keyword Input */}
             <div className="flex-1 relative min-w-[130px]">
@@ -120,19 +122,19 @@ export const Header: React.FC<UnifiedHeaderProps> = ({
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 placeholder="Job title, skill, company..."
-                className="w-full bg-slate-950/80 text-white placeholder-slate-400 text-xs pl-8 pr-2 py-1.5 rounded-lg border border-slate-800 focus:outline-none focus:border-indigo-500 transition"
+                className="w-full bg-white text-slate-900 placeholder-slate-400 text-xs pl-8 pr-2 py-1.5 rounded-lg border border-slate-200 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition"
               />
             </div>
 
             {/* City Input */}
             <div className="w-32 sm:w-44 relative">
-              <MapPin className="w-3.5 h-3.5 text-cyan-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+              <MapPin className="w-3.5 h-3.5 text-rose-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 placeholder="City (Delhi, etc.)"
-                className="w-full bg-slate-950/80 text-white placeholder-slate-400 text-xs pl-8 pr-2 py-1.5 rounded-lg border border-slate-800 focus:outline-none focus:border-indigo-500 transition"
+                className="w-full bg-white text-slate-900 placeholder-slate-400 text-xs pl-8 pr-2 py-1.5 rounded-lg border border-slate-200 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition"
               />
             </div>
 
@@ -141,7 +143,7 @@ export const Header: React.FC<UnifiedHeaderProps> = ({
               <select
                 value={radiusKm}
                 onChange={(e) => setRadiusKm(Number(e.target.value))}
-                className="w-full bg-slate-950/80 text-white text-xs px-2 py-1.5 rounded-lg border border-slate-800 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                className="w-full bg-white text-slate-800 text-xs px-2 py-1.5 rounded-lg border border-slate-200 focus:outline-none focus:border-rose-500 cursor-pointer"
               >
                 <option value={5}>5 km</option>
                 <option value={10}>10 km</option>
@@ -157,15 +159,15 @@ export const Header: React.FC<UnifiedHeaderProps> = ({
               onClick={handleLocateMe}
               disabled={isLocating}
               title="Locate me"
-              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/80 transition"
+              className="p-1.5 rounded-lg bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-600 border border-slate-200 transition"
             >
-              <Crosshair className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin text-cyan-400' : ''}`} />
+              <Crosshair className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin text-rose-500' : ''}`} />
             </button>
 
             {/* Search Submit */}
             <button
               type="submit"
-              className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-xs font-bold py-1.5 px-3 rounded-lg shadow-lg shadow-indigo-600/30 transition flex items-center gap-1 shrink-0"
+              className="bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white text-xs font-bold py-1.5 px-3.5 rounded-lg shadow-md shadow-rose-600/25 transition flex items-center gap-1 shrink-0"
             >
               <Navigation className="w-3 h-3" />
               <span>Search</span>
@@ -178,9 +180,9 @@ export const Header: React.FC<UnifiedHeaderProps> = ({
             {onOpenFilters && (
               <button
                 onClick={onOpenFilters}
-                className="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 font-semibold flex items-center gap-1 transition"
+                className="px-2.5 py-1.5 rounded-lg bg-white hover:bg-rose-50 text-slate-700 border border-slate-200 font-semibold flex items-center gap-1 transition"
               >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-400" />
+                <SlidersHorizontal className="w-3.5 h-3.5 text-rose-600" />
                 <span className="hidden sm:inline">Filters</span>
               </button>
             )}
@@ -188,9 +190,9 @@ export const Header: React.FC<UnifiedHeaderProps> = ({
             {onToggleSidebar && (
               <button
                 onClick={onToggleSidebar}
-                className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 font-semibold transition"
+                className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white hover:bg-rose-50 text-slate-700 border border-slate-200 font-semibold transition"
               >
-                {isSidebarOpen ? <PanelLeftClose className="w-3.5 h-3.5 text-cyan-400" /> : <PanelLeftOpen className="w-3.5 h-3.5 text-cyan-400" />}
+                {isSidebarOpen ? <PanelLeftClose className="w-3.5 h-3.5 text-rose-600" /> : <PanelLeftOpen className="w-3.5 h-3.5 text-rose-600" />}
                 <span>{isSidebarOpen ? 'Hide List' : 'Show List'}</span>
               </button>
             )}
@@ -198,22 +200,22 @@ export const Header: React.FC<UnifiedHeaderProps> = ({
             {onRefreshJobs && (
               <button
                 onClick={onRefreshJobs}
-                className="hidden xl:flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 font-medium transition"
+                className="hidden xl:flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white hover:bg-rose-50 text-slate-700 border border-slate-200 font-medium transition"
                 title="Sync Data"
               >
-                <RefreshCw className="w-3.5 h-3.5 text-emerald-400" />
+                <RefreshCw className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Sync</span>
               </button>
             )}
 
             <Link
               href="/saved"
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 font-medium transition"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white hover:bg-rose-50 text-slate-700 border border-slate-200 font-medium transition"
             >
-              <Bookmark className="w-3.5 h-3.5 text-amber-400" />
+              <Bookmark className="w-3.5 h-3.5 text-rose-600" />
               <span>Saved</span>
               {savedCount > 0 && (
-                <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm">
+                <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-rose-600 text-white shadow-sm">
                   {savedCount}
                 </span>
               )}
@@ -221,18 +223,18 @@ export const Header: React.FC<UnifiedHeaderProps> = ({
 
             <Link
               href="/admin"
-              className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 font-medium transition"
+              className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white hover:bg-rose-50 text-slate-700 border border-slate-200 font-medium transition"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
               <span>Admin</span>
             </Link>
           </div>
 
         </div>
 
-        {/* ROW 2: Popular City Quick Filter Chips */}
-        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none text-[11px] pt-1 border-t border-slate-900">
-          <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px] whitespace-nowrap">Popular Cities:</span>
+        {/* ROW 2: Popular City Quick Filter Chips - Lychee Crimson Theme */}
+        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none text-[11px] pt-1 border-t border-slate-100">
+          <span className="text-slate-500 font-bold uppercase tracking-wider text-[10px] whitespace-nowrap">Popular Cities:</span>
           {POPULAR_CITIES.map((c) => {
             const isActive = city.toLowerCase() === c.toLowerCase();
             return (
@@ -247,8 +249,8 @@ export const Header: React.FC<UnifiedHeaderProps> = ({
                 }}
                 className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium transition whitespace-nowrap flex items-center gap-1 ${
                   isActive
-                    ? 'bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 text-white font-bold shadow-md shadow-indigo-500/30 ring-1 ring-white/30 scale-[1.03]'
-                    : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
+                    ? 'bg-gradient-to-r from-rose-600 via-rose-500 to-pink-600 text-white font-extrabold shadow-md shadow-rose-500/30 scale-[1.03]'
+                    : 'bg-slate-100 text-slate-700 hover:bg-rose-50 hover:text-rose-600 border border-slate-200/80'
                 }`}
               >
                 <span>📍</span>

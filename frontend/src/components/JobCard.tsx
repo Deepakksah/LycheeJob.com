@@ -40,15 +40,15 @@ export const JobCard: React.FC<JobCardProps> = ({
 
   const getSourceBadgeStyle = (sourceName: string) => {
     const src = sourceName.toLowerCase();
-    if (src.includes('linkedin')) return 'bg-sky-500/15 text-sky-300 border-sky-500/30';
-    if (src.includes('google')) return 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
-    if (src.includes('naukri')) return 'bg-purple-500/15 text-purple-300 border-purple-500/30';
-    if (src.includes('indeed')) return 'bg-blue-500/15 text-blue-300 border-blue-500/30';
-    if (src.includes('jobhai') || src.includes('apna')) return 'bg-amber-500/15 text-amber-300 border-amber-500/30';
-    if (src.includes('facebook') || src.includes('meta')) return 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30';
-    if (src.includes('glassdoor')) return 'bg-rose-500/15 text-rose-300 border-rose-500/30';
-    if (src.includes('foundit') || src.includes('monster')) return 'bg-pink-500/15 text-pink-300 border-pink-500/30';
-    return 'bg-slate-800 text-slate-300 border-slate-700';
+    if (src.includes('linkedin')) return 'bg-sky-50 text-sky-700 border-sky-200';
+    if (src.includes('google')) return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+    if (src.includes('naukri')) return 'bg-purple-50 text-purple-700 border-purple-200';
+    if (src.includes('indeed')) return 'bg-blue-50 text-blue-700 border-blue-200';
+    if (src.includes('jobhai') || src.includes('apna')) return 'bg-amber-50 text-amber-800 border-amber-200';
+    if (src.includes('facebook') || src.includes('meta')) return 'bg-indigo-50 text-indigo-700 border-indigo-200';
+    if (src.includes('glassdoor')) return 'bg-rose-50 text-rose-700 border-rose-200';
+    if (src.includes('foundit') || src.includes('monster')) return 'bg-pink-50 text-pink-700 border-pink-200';
+    return 'bg-slate-100 text-slate-700 border-slate-200';
   };
 
   const citySlug = (job.city || 'india').toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -61,10 +61,10 @@ export const JobCard: React.FC<JobCardProps> = ({
   return (
     <div
       onClick={() => onSelect && onSelect(job)}
-      className={`group relative rounded-xl p-2.5 sm:p-3 border transition-all duration-200 cursor-pointer backdrop-blur-md ${
+      className={`group relative rounded-xl p-2.5 sm:p-3 border transition-all duration-200 cursor-pointer ${
         isSelected
-          ? 'bg-gradient-to-r from-indigo-950/90 via-slate-900 to-blue-950/90 border-indigo-500 ring-2 ring-indigo-500/40 shadow-lg shadow-indigo-500/10 scale-[1.01]'
-          : 'bg-slate-900/80 border-slate-800/80 hover:bg-slate-850 hover:border-slate-700/80 hover:shadow-md'
+          ? 'bg-gradient-to-r from-rose-50/90 via-white to-pink-50/90 border-rose-500 ring-2 ring-rose-500/30 shadow-md scale-[1.01]'
+          : 'bg-white border-slate-200/90 hover:border-rose-300 hover:bg-rose-50/40 hover:shadow-sm'
       }`}
     >
       <div className="flex items-center justify-between gap-2.5">
@@ -73,7 +73,7 @@ export const JobCard: React.FC<JobCardProps> = ({
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
           
           {/* Logo / Initials Badge */}
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-white to-slate-100 p-0.5 flex items-center justify-center shrink-0 border border-white/20 shadow-sm overflow-hidden group-hover:scale-105 transition duration-200">
+          <div className="w-8 h-8 rounded-lg bg-white p-0.5 flex items-center justify-center shrink-0 border border-slate-200 shadow-sm overflow-hidden group-hover:scale-105 transition duration-200">
             {job.company.logoUrl ? (
               <img
                 src={job.company.logoUrl}
@@ -84,7 +84,7 @@ export const JobCard: React.FC<JobCardProps> = ({
                 }}
               />
             ) : (
-              <span className="text-slate-900 font-extrabold text-[11px]">
+              <span className="text-rose-600 font-extrabold text-[11px]">
                 {getCompanyInitials(job.company.name)}
               </span>
             )}
@@ -92,18 +92,18 @@ export const JobCard: React.FC<JobCardProps> = ({
 
           {/* Job Title & Subtitle */}
           <div className="flex-1 min-w-0">
-            <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-400 transition truncate leading-tight flex items-center gap-1.5">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-rose-600 transition truncate leading-tight flex items-center gap-1.5">
               <span>{job.title}</span>
-              {isSelected && <Sparkles className="w-3 h-3 text-amber-400 shrink-0 animate-pulse" />}
+              {isSelected && <Sparkles className="w-3 h-3 text-rose-500 shrink-0 animate-pulse" />}
             </h3>
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium truncate mt-0.5">
-              <span className="text-slate-200 font-semibold truncate max-w-[110px]">{job.company.name}</span>
-              <span className="text-slate-600">•</span>
-              <span className="text-cyan-400 flex items-center gap-0.5 font-semibold">
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-600 font-medium truncate mt-0.5">
+              <span className="text-slate-900 font-bold truncate max-w-[110px]">{job.company.name}</span>
+              <span className="text-slate-400">•</span>
+              <span className="text-rose-600 flex items-center gap-0.5 font-bold">
                 <MapPin className="w-3 h-3" />
                 {job.city || 'India'}
               </span>
-              <span className="text-slate-600">•</span>
+              <span className="text-slate-400">•</span>
               <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold border ${badgeStyle}`}>
                 {job.sourceName}
               </span>
@@ -116,15 +116,15 @@ export const JobCard: React.FC<JobCardProps> = ({
         <div className="flex items-center gap-1.5 shrink-0">
           
           {salaryTag && (
-            <span className="hidden sm:inline-flex items-center gap-0.5 bg-gradient-to-r from-emerald-950 to-teal-950 text-emerald-400 text-[10px] font-extrabold px-2 py-0.5 rounded border border-emerald-700/60 shadow-sm">
-              <DollarSign className="w-3 h-3 text-emerald-400" />
+            <span className="hidden sm:inline-flex items-center gap-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded border border-emerald-200 shadow-xs">
+              <DollarSign className="w-3 h-3 text-emerald-600" />
               <span>{salaryTag}</span>
             </span>
           )}
 
           {job.interviewDate && (
-            <span className="bg-gradient-to-r from-amber-950 to-orange-950 text-amber-300 text-[10px] font-bold px-1.5 py-0.5 rounded border border-amber-700/60 flex items-center gap-1 shadow-sm" title="Walk-in Available">
-              <Calendar className="w-3 h-3 text-amber-400" />
+            <span className="bg-rose-50 text-rose-700 text-[10px] font-extrabold px-1.5 py-0.5 rounded border border-rose-200 flex items-center gap-1 shadow-xs" title="Walk-in Available">
+              <Calendar className="w-3 h-3 text-rose-600" />
               <span className="hidden md:inline">Walk-in</span>
             </span>
           )}
@@ -136,12 +136,12 @@ export const JobCard: React.FC<JobCardProps> = ({
             }}
             className={`p-1.5 rounded-lg transition ${
               isSaved
-                ? 'bg-indigo-600/30 text-indigo-400 border border-indigo-500/40'
-                : 'text-slate-500 hover:text-white hover:bg-slate-800'
+                ? 'bg-rose-100 text-rose-600 border border-rose-300'
+                : 'text-slate-400 hover:text-rose-600 hover:bg-rose-50'
             }`}
             title={isSaved ? 'Saved' : 'Save Job'}
           >
-            <Bookmark className={`w-3.5 h-3.5 ${isSaved ? 'fill-indigo-400 text-indigo-400' : ''}`} />
+            <Bookmark className={`w-3.5 h-3.5 ${isSaved ? 'fill-rose-600 text-rose-600' : ''}`} />
           </button>
         </div>
 

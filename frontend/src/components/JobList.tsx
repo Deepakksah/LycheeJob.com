@@ -37,15 +37,15 @@ export const JobList: React.FC<JobListProps> = ({
   onOpenMobileFilters
 }) => {
   return (
-    <div className="flex flex-col h-full space-y-4">
+    <div className="flex flex-col h-full space-y-3">
       
       {/* Top Header: Total Count + Mobile Filter Toggle + Sorting Dropdown */}
-      <div className="flex items-center justify-between pb-2 border-b border-slate-800 gap-2">
+      <div className="flex items-center justify-between pb-2 border-b border-rose-100 gap-2">
         <div className="flex items-center gap-2">
-          <span className="text-base font-extrabold text-white">
-            {totalJobs} Jobs
+          <span className="text-base font-extrabold text-slate-900">
+            <span className="text-rose-600 font-black">{totalJobs}</span> Jobs
           </span>
-          <span className="text-xs text-slate-400 font-medium">Found</span>
+          <span className="text-xs text-slate-500 font-semibold">Found</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -54,28 +54,28 @@ export const JobList: React.FC<JobListProps> = ({
           {onOpenMobileFilters && (
             <button
               onClick={onOpenMobileFilters}
-              className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-medium"
+              className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-slate-700 hover:text-rose-600 border border-slate-200 text-xs font-semibold shadow-xs"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-blue-400" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-rose-600" />
               <span>Filters</span>
             </button>
           )}
 
           {/* Sorting Dropdown */}
-          <div className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-800/80 px-2.5 py-1.5 rounded-xl border border-slate-700">
-            <ArrowUpDown className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+          <div className="flex items-center gap-1.5 text-xs text-slate-600 bg-white px-2.5 py-1.5 rounded-xl border border-slate-200 shadow-xs">
+            <ArrowUpDown className="w-3.5 h-3.5 text-rose-600 shrink-0" />
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value)}
-              className="bg-transparent text-white font-medium focus:outline-none cursor-pointer text-xs"
+              className="bg-transparent text-slate-900 font-bold focus:outline-none cursor-pointer text-xs"
             >
-              <option value="relevance" className="bg-slate-900">Sort: Relevance</option>
-              <option value="newest" className="bg-slate-900">Sort: Newest</option>
-              <option value="oldest" className="bg-slate-900">Sort: Oldest</option>
-              <option value="salary_high" className="bg-slate-900">Salary: High to Low</option>
-              <option value="salary_low" className="bg-slate-900">Salary: Low to High</option>
-              <option value="distance" className="bg-slate-900">Distance from Me</option>
-              <option value="company" className="bg-slate-900">Company Name</option>
+              <option value="relevance" className="bg-white text-slate-900">Sort: Relevance</option>
+              <option value="newest" className="bg-white text-slate-900">Sort: Newest</option>
+              <option value="oldest" className="bg-white text-slate-900">Sort: Oldest</option>
+              <option value="salary_high" className="bg-white text-slate-900">Salary: High to Low</option>
+              <option value="salary_low" className="bg-white text-slate-900">Salary: Low to High</option>
+              <option value="distance" className="bg-white text-slate-900">Distance from Me</option>
+              <option value="company" className="bg-white text-slate-900">Company Name</option>
             </select>
           </div>
         </div>

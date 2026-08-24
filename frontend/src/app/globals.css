@@ -6,18 +6,18 @@
 
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white;
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-rose-500 selection:text-white;
   }
 }
 
-/* Force dark background on Leaflet map container to prevent white screen flashes on page refresh */
+/* Force light background on Leaflet map container to match Lychee theme */
 .leaflet-container,
 .leaflet-tile-container,
 .leaflet-pane {
-  background-color: #030712 !important;
+  background-color: #f8fafc !important;
 }
 
-/* Custom Marker CSS for Google Maps Overlay */
+/* Custom Marker CSS for Google Maps Overlay - Lychee Theme */
 .company-map-marker-container {
   position: absolute;
   transform: translate(-50%, -100%);
@@ -40,7 +40,7 @@
   position: relative;
   background: #ffffff;
   border-radius: 9999px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 6px 18px rgba(225, 29, 72, 0.25), 0 2px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,8 +50,8 @@
 }
 
 .company-map-marker-container.selected .company-map-marker-bubble {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5), 0 10px 25px rgba(0, 0, 0, 0.6);
+  border-color: #e11d48;
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.4), 0 10px 25px rgba(225, 29, 72, 0.35);
 }
 
 .company-map-marker-pointer {
@@ -67,55 +67,47 @@
 }
 
 .company-map-marker-container.selected .company-map-marker-pointer {
-  border-top-color: #6366f1;
+  border-top-color: #e11d48;
 }
 
 .company-map-marker-badge {
   position: absolute;
   top: -4px;
   right: -4px;
-  background: linear-gradient(135deg, #ef4444, #f43f5e);
+  background: linear-gradient(135deg, #e11d48, #be123c);
   color: white;
   font-weight: 800;
   font-size: 10px;
   padding: 1px 6px;
   border-radius: 9999px;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.5);
+  box-shadow: 0 2px 6px rgba(225, 29, 72, 0.4);
   border: 1.5px solid white;
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Lychee Theme */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.3);
+  background: #f43f5e;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.6);
+  background: #e11d48;
 }
 
-/* Glassmorphism & Glowing Utilities */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.75);
+/* Glassmorphism & Glowing Utilities for Lychee Theme */
+.lychee-glass-panel {
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(244, 63, 94, 0.15);
 }
 
-.glow-blue {
-  box-shadow: 0 0 20px -5px rgba(59, 130, 246, 0.3);
-}
-
-.glow-indigo {
-  box-shadow: 0 0 20px -5px rgba(99, 102, 241, 0.3);
-}
-
-.glow-emerald {
-  box-shadow: 0 0 20px -5px rgba(16, 185, 129, 0.3);
+.glow-lychee {
+  box-shadow: 0 0 20px -5px rgba(225, 29, 72, 0.3);
 }
