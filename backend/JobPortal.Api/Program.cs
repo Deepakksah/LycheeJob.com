@@ -32,12 +32,25 @@ builder.Services.AddCors(options =>
 
 // Configure Database Connection (MySQL with SQLite local fallback)
 string? mySqlConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-if (!string.IsNullOrEmpty(mySqlConnectionString) && !mySqlConnectionString.Contains("YOUR_MYSQL_PASSWORD"))
+bool useMySql = !string.IsNullOrEmpty(mySqlConnectionString) && !mySqlConnectionString.Contains("YOUR_MYSQL_PASSWORD");
+
+if (useMySql)
 {
-    builder.Services.AddDbContext<AppDbContext>(options =>
+    try
     {
-        options.UseMySql(mySqlConnectionString, ServerVersion.AutoDetect(mySqlConnectionString));
-    });
+        builder.Services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseMySql(mySqlConnectionString, new MySqlServerVersion(new Version(8, 0, 30)));
+        });
+    }
+    catch
+    {
+        string dbPath = Path.Combine(AppContext.BaseDirectory, "jobportal.db");
+        builder.Services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseSqlite($"Data Source={dbPath}");
+        });
+    }
 }
 else
 {
