@@ -15,27 +15,7 @@ interface JobMapProps {
   zoom?: number;
 }
 
-// Helper function to resolve real official company brand logos
-const getCompanyLogoUrl = (companyName: string, logoUrl?: string) => {
-  if (logoUrl && !logoUrl.includes('unsplash.com')) return logoUrl;
-  const name = companyName.toLowerCase();
-  if (name.includes('google')) return 'https://logo.clearbit.com/google.com';
-  if (name.includes('meta') || name.includes('facebook')) return 'https://logo.clearbit.com/meta.com';
-  if (name.includes('microsoft')) return 'https://logo.clearbit.com/microsoft.com';
-  if (name.includes('amazon')) return 'https://logo.clearbit.com/amazon.com';
-  if (name.includes('tcs') || name.includes('tata consultancy')) return 'https://logo.clearbit.com/tcs.com';
-  if (name.includes('infosys')) return 'https://logo.clearbit.com/infosys.com';
-  if (name.includes('wipro')) return 'https://logo.clearbit.com/wipro.com';
-  if (name.includes('hcl')) return 'https://logo.clearbit.com/hcltech.com';
-  if (name.includes('zomato')) return 'https://logo.clearbit.com/zomato.com';
-  if (name.includes('swiggy')) return 'https://logo.clearbit.com/swiggy.com';
-  if (name.includes('paytm')) return 'https://logo.clearbit.com/paytm.com';
-  if (name.includes('flipkart')) return 'https://logo.clearbit.com/flipkart.com';
-  if (name.includes('accenture')) return 'https://logo.clearbit.com/accenture.com';
-  if (name.includes('capgemini')) return 'https://logo.clearbit.com/capgemini.com';
-  if (name.includes('cognizant')) return 'https://logo.clearbit.com/cognizant.com';
-  return logoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(companyName)}&background=0D8ABC&color=fff&bold=true`;
-};
+import { getExactCompanyLogoUrl, getBackupGoogleFaviconUrl } from '../utils/companyLogos';
 
 export const JobMap: React.FC<JobMapProps> = ({
   jobs,
@@ -118,7 +98,8 @@ export const JobMap: React.FC<JobMapProps> = ({
       const isSelected = selectedJob?.id === job.id;
       const sizePx = isSelected ? 48 : 38;
 
-      const companyLogo = getCompanyLogoUrl(job.company.name, job.company.logoUrl);
+      const companyLogo = getExactCompanyLogoUrl(job.company.name, job.company.website, job.company.logoUrl);
+      const backupLogo = getBackupGoogleFaviconUrl(job.company.name, job.company.website);
       const initials = job.company.name
         .split(' ')
         .map((n) => n[0])
@@ -131,8 +112,8 @@ export const JobMap: React.FC<JobMapProps> = ({
           <div class="company-map-marker-bubble" style="width: ${sizePx}px; height: ${sizePx}px; background: #ffffff;">
             ${
               companyLogo
-                ? `<img src="${companyLogo}" alt="${job.company.name}" style="width: 100%; height: 100%; object-fit: contain; padding: 2px; border-radius: 50%;" onError="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(job.company.name)}&background=0D8ABC&color=fff&bold=true';" />`
-                : `<span style="font-weight: 800; font-size: 11px; color: #1e293b;">${initials}</span>`
+                ? `<img src="${companyLogo}" alt="${job.company.name}" style="width: 100%; height: 100%; object-fit: contain; padding: 2px; border-radius: 50%;" onError="this.onerror=null; this.src='${backupLogo}';" />`
+                : `<span style="font-weight: 800; font-size: 11px; color: #e11d48;">${initials}</span>`
             }
           </div>
           ${count > 1 ? `<div class="company-map-marker-badge">${count}</div>` : ''}
