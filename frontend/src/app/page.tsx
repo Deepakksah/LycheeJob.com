@@ -32,15 +32,15 @@ export default function AppLayoutPage() {
 
   const [filters, setFilters] = useState<JobSearchFilters>({
     keyword: '',
-    city: 'Delhi',
+    city: '',
     page: 1,
-    pageSize: 25,
+    pageSize: 100,
     sortBy: 'relevance'
   });
 
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
-    pageSize: 25,
+    pageSize: 100,
     total: 0,
     totalPages: 1
   });
