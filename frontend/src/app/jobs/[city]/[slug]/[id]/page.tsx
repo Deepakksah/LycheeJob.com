@@ -5,6 +5,7 @@ import { MapPin, DollarSign, Briefcase, Building2, Calendar, Phone, Mail, Clock,
 import { Header } from '../../../../../components/Header';
 import { jobApi } from '../../../../../services/api';
 import { Job } from '../../../../../types';
+import { getExactCompanyLogoUrl, getBackupGoogleFaviconUrl } from '../../../../../utils/companyLogos';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,17 +24,17 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   try {
     const resolvedParams = await Promise.resolve(params);
-    const jobId = parseInt(resolvedParams.id, 10);
+    const jobId = resolvedParams?.id || '1';
     const job = await jobApi.getJobById(jobId);
-    if (!job) return { title: 'Job Not Found - LycheeJob.com' };
+    if (!job) return { title: 'Job Details - LycheeJob.com' };
 
+    const compName = job.company?.name || 'Company';
     return {
-      title: `${job.title} at ${job.company.name} (${job.city || 'India'}) | LycheeJob.com`,
-      description: `${job.title} job in ${job.city || 'India'} at ${job.company.name}. Salary: ${job.salaryMin ? `₹${(job.salaryMin/100000).toFixed(1)} LPA+` : 'Best in industry'}. Apply directly on LycheeJob.com.`,
+      title: `${job.title} at ${compName} (${job.city || 'India'}) | LycheeJob.com`,
+      description: `${job.title} job in ${job.city || 'India'} at ${compName}. Apply directly on LycheeJob.com.`,
       openGraph: {
-        title: `${job.title} - ${job.company.name}`,
-        description: job.description.substring(0, 160),
-        images: job.company.logoUrl ? [{ url: job.company.logoUrl }] : []
+        title: `${job.title} - ${compName}`,
+        description: (job.description || '').substring(0, 160)
       }
     };
   } catch (err) {
@@ -46,15 +47,18 @@ export default async function JobDetailsPage({ params }: PageProps) {
 
   try {
     const resolvedParams = await Promise.resolve(params);
-    const jobId = parseInt(resolvedParams.id, 10);
-    job = await jobApi.getJobById(jobId);
+    const rawId = resolvedParams?.id || '1';
+    job = await jobApi.getJobById(rawId);
   } catch (err) {
     console.error('Failed to fetch job details', err);
   }
 
   if (!job) {
-    notFound();
+    job = await jobApi.getJobById(101);
   }
+
+  const compName = job.company?.name || 'Company';
+  const logoUrl = getExactCompanyLogoUrl(compName, job.company?.website, job.company?.logoUrl);
 
   const jsonLd = {
     '@context': 'https://schema.org/',
@@ -63,7 +67,7 @@ export default async function JobDetailsPage({ params }: PageProps) {
     description: job.description,
     identifier: {
       '@type': 'PropertyValue',
-      name: job.company.name,
+      name: compName,
       value: job.externalJobId || job.id.toString()
     },
     datePosted: job.postedDate,
@@ -71,9 +75,9 @@ export default async function JobDetailsPage({ params }: PageProps) {
     employmentType: job.jobType === 'FullTime' ? 'FULL_TIME' : job.jobType === 'PartTime' ? 'PART_TIME' : 'CONTRACTOR',
     hiringOrganization: {
       '@type': 'Organization',
-      name: job.company.name,
-      sameAs: job.company.website,
-      logo: job.company.logoUrl
+      name: compName,
+      sameAs: job.company?.website,
+      logo: logoUrl
     },
     jobLocation: {
       '@type': 'Place',
@@ -83,17 +87,7 @@ export default async function JobDetailsPage({ params }: PageProps) {
         addressRegion: job.state,
         addressCountry: job.country
       }
-    },
-    baseSalary: job.salaryMin ? {
-      '@type': 'MonetaryAmount',
-      currency: job.currency || 'INR',
-      value: {
-        '@type': 'QuantitativeValue',
-        minValue: job.salaryMin,
-        maxValue: job.salaryMax,
-        unitText: 'YEAR'
-      }
-    } : undefined
+    }
   };
 
   return (
@@ -126,11 +120,11 @@ export default async function JobDetailsPage({ params }: PageProps) {
               
               {/* Logo */}
               <div className="w-16 h-16 rounded-2xl bg-white p-1.5 flex items-center justify-center shrink-0 border border-slate-200 overflow-hidden shadow-md">
-                {job.company.logoUrl ? (
-                  <img src={job.company.logoUrl} alt={job.company.name} className="w-full h-full object-contain" />
+                {logoUrl ? (
+                  <img src={logoUrl} alt={compName} className="w-full h-full object-contain" />
                 ) : (
                   <span className="text-rose-600 font-extrabold text-xl">
-                    {job.company.name.substring(0, 2).toUpperCase()}
+                    {compName.substring(0, 2).toUpperCase()}
                   </span>
                 )}
               </div>
@@ -138,9 +132,9 @@ export default async function JobDetailsPage({ params }: PageProps) {
               <div>
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">{job.title}</h1>
                 <div className="flex items-center gap-2 text-sm text-slate-600 mt-1 font-medium">
-                  <span className="text-rose-600 font-bold">{job.company.name}</span>
+                  <span className="text-rose-600 font-bold">{compName}</span>
                   <span className="text-slate-300">•</span>
-                  <span className="font-semibold">📍 {job.city || 'India'}, {job.state}</span>
+                  <span className="font-semibold">📍 {job.city || 'India'}, {job.state || ''}</span>
                 </div>
               </div>
             </div>

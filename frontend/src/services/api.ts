@@ -1190,14 +1190,18 @@ export const jobApi = {
     };
   },
 
-  getJobById: async (id: number): Promise<Job> => {
+  getJobById: async (id: number | string): Promise<Job> => {
+    const numId = typeof id === 'number' ? id : parseInt(String(id), 10);
     try {
-      const response = await api.get<{ success: boolean; data: Job }>(`/jobs/${id}`);
-      if (response.data?.data) return response.data.data;
+      if (!isNaN(numId)) {
+        const response = await api.get<{ success: boolean; data: Job }>(`/jobs/${numId}`);
+        if (response.data?.data) return response.data.data;
+      }
     } catch (err) {
       console.warn('Backend API failed. Returning fallback job by ID:', err);
     }
-    return FALLBACK_JOBS.find(j => j.id === id) || FALLBACK_JOBS[0];
+    const match = FALLBACK_JOBS.find(j => j.id === numId || j.id.toString() === String(id));
+    return match || FALLBACK_JOBS[0];
   },
 
   geocode: async (address: string) => {
