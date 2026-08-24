@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { MapPin, DollarSign, Calendar, Bookmark, Sparkles, ExternalLink } from 'lucide-react';
 import { Job } from '../types';
+import { getExactCompanyLogoUrl, getBackupGoogleFaviconUrl } from '../utils/companyLogos';
 
 interface JobCardProps {
   job: Job;
@@ -20,6 +21,11 @@ export const JobCard: React.FC<JobCardProps> = ({
   onSelect,
   onToggleSave
 }) => {
+  const [imgSrc, setImgSrc] = useState<string>(
+    getExactCompanyLogoUrl(job.company.name, job.company.website, job.company.logoUrl)
+  );
+  const [imgFailed, setImgFailed] = useState<boolean>(false);
+
   const getCompanyInitials = (name: string) => {
     return name
       .split(' ')
@@ -51,9 +57,14 @@ export const JobCard: React.FC<JobCardProps> = ({
     return 'bg-slate-100 text-slate-700 border-slate-200';
   };
 
-  const citySlug = (job.city || 'india').toLowerCase().replace(/[^a-z0-9]/g, '-');
-  const titleSlug = job.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
-  const detailsUrl = `/jobs/${citySlug}/${titleSlug}/${job.id}`;
+  const handleImgError = () => {
+    const backup = getBackupGoogleFaviconUrl(job.company.name, job.company.website);
+    if (imgSrc !== backup) {
+      setImgSrc(backup);
+    } else {
+      setImgFailed(true);
+    }
+  };
 
   const salaryTag = formatSalaryShort();
   const badgeStyle = getSourceBadgeStyle(job.sourceName);
@@ -74,14 +85,12 @@ export const JobCard: React.FC<JobCardProps> = ({
           
           {/* Logo / Initials Badge */}
           <div className="w-8 h-8 rounded-lg bg-white p-0.5 flex items-center justify-center shrink-0 border border-slate-200 shadow-sm overflow-hidden group-hover:scale-105 transition duration-200">
-            {job.company.logoUrl ? (
+            {!imgFailed && imgSrc ? (
               <img
-                src={job.company.logoUrl}
+                src={imgSrc}
                 alt={job.company.name}
                 className="w-full h-full object-contain"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
+                onError={handleImgError}
               />
             ) : (
               <span className="text-rose-600 font-extrabold text-[11px]">

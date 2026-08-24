@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { MapPin, DollarSign, Briefcase, Phone, Mail, Calendar, ExternalLink, X } from 'lucide-react';
 import { Job } from '../types';
+import { getExactCompanyLogoUrl, getBackupGoogleFaviconUrl } from '../utils/companyLogos';
 
 interface JobInfoWindowProps {
   job: Job;
@@ -18,6 +19,11 @@ export const JobInfoWindow: React.FC<JobInfoWindowProps> = ({
   onClose,
   onSelectJob
 }) => {
+  const [imgSrc, setImgSrc] = useState<string>(
+    getExactCompanyLogoUrl(job.company.name, job.company.website, job.company.logoUrl)
+  );
+  const [imgFailed, setImgFailed] = useState<boolean>(false);
+
   const getInitials = (name: string) =>
     name
       .split(' ')
@@ -25,6 +31,15 @@ export const JobInfoWindow: React.FC<JobInfoWindowProps> = ({
       .join('')
       .substring(0, 2)
       .toUpperCase();
+
+  const handleImgError = () => {
+    const backup = getBackupGoogleFaviconUrl(job.company.name, job.company.website);
+    if (imgSrc !== backup) {
+      setImgSrc(backup);
+    } else {
+      setImgFailed(true);
+    }
+  };
 
   const citySlug = (job.city || 'india').toLowerCase().replace(/[^a-z0-9]/g, '-');
   const titleSlug = job.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -44,12 +59,12 @@ export const JobInfoWindow: React.FC<JobInfoWindowProps> = ({
       {/* Header with Company Logo */}
       <div className="flex items-center gap-3 pr-6 pb-3 border-b border-slate-100">
         <div className="w-11 h-11 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 border border-slate-200 overflow-hidden shadow-sm">
-          {job.company.logoUrl ? (
+          {!imgFailed && imgSrc ? (
             <img
-              src={job.company.logoUrl}
+              src={imgSrc}
               alt={job.company.name}
               className="w-full h-full object-contain"
-              onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+              onError={handleImgError}
             />
           ) : (
             <span className="text-rose-600 font-extrabold text-xs">
