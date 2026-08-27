@@ -1,0 +1,11 @@
+{
+  "build": {
+    "builder": "dockerfile",
+    "dockerfile": "backend/Dockerfile"
+  },
+  "deploy": {
+    "startCommand": "dotnet JobPortal.Api.dll",
+    "restartPolicyMaxRetries": 5,
+    "restartPolicyWindowSeconds": 60
+  }
+}
