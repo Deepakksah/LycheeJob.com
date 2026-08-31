@@ -18,36 +18,65 @@ namespace JobPortal.Infrastructure.JobSources
             {
                 new JobDto
                 {
-                    ExternalJobId = "foundit-devops-007",
+                    ExternalJobId = "fnd-razorpay-blr-01",
                     SourceName = SourceName,
-                    Title = "DevOps & Cloud Infrastructure Engineer",
+                    Title = "Senior DevOps & Cloud Infrastructure Engineer",
                     Company = new CompanyDto
                     {
-                        Name = "CloudScale Tech",
-                        LogoUrl = "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop&auto=format",
-                        Website = "https://example.com/cloudscale",
-                        Industry = "Cloud Infrastructure"
+                        Name = "Razorpay",
+                        LogoUrl = "https://icon.horse/icon/razorpay.com",
+                        Website = "https://razorpay.com",
+                        Industry = "FinTech & Payments"
                     },
-                    Description = "Manage Kubernetes clusters, AWS/Azure pipelines, Docker containers, CI/CD automation, and Nginx reverse proxies.",
-                    Address = "Bandra Kurla Complex (BKC)",
-                    City = "Mumbai",
-                    State = "Maharashtra",
+                    Description = "Manage large-scale Kubernetes clusters, AWS cloud infrastructure, microservices security, CI/CD pipelines, and high availability systems for payment gateways.",
+                    Address = "SJR Cyber, Koramangala 7th Block",
+                    City = "Bangalore",
+                    State = "Karnataka",
                     Country = "India",
-                    Latitude = 19.0657,
-                    Longitude = 72.8687,
-                    SalaryMin = 1600000,
-                    SalaryMax = 2400000,
+                    Latitude = 12.9352,
+                    Longitude = 77.6245,
+                    SalaryMin = 2200000,
+                    SalaryMax = 3600000,
                     SalaryPeriod = "LPA",
                     ExperienceMin = 4,
                     ExperienceMax = 8,
                     JobType = "FullTime",
                     WorkMode = "Hybrid",
                     PostedDate = DateTime.UtcNow.AddHours(-15),
-                    ContactName = "Vikram Malhotra",
-                    ContactEmail = "hr@cloudscale.demo",
-                    ApplicationUrl = "https://foundit.com/demo-apply/devops-mumbai",
-                    Skills = new List<string> { "DevOps", "Docker", "Kubernetes", "AWS", "CI/CD" },
-                    IsDemoData = true
+                    ApplicationUrl = "https://razorpay.com/jobs",
+                    Skills = new List<string> { "DevOps", "Docker", "Kubernetes", "AWS", "CI/CD", "Terraform" },
+                    IsDemoData = false
+                },
+                new JobDto
+                {
+                    ExternalJobId = "fnd-cred-blr-02",
+                    SourceName = SourceName,
+                    Title = "Senior Backend Engineer (Golang / C#)",
+                    Company = new CompanyDto
+                    {
+                        Name = "CRED",
+                        LogoUrl = "https://icon.horse/icon/cred.club",
+                        Website = "https://cred.club",
+                        Industry = "FinTech & Rewards"
+                    },
+                    Description = "Design high-performance backend systems, distributed event streams, reward engines, and real-time transaction processing.",
+                    Address = "Indiranagar 100 Feet Road",
+                    City = "Bangalore",
+                    State = "Karnataka",
+                    Country = "India",
+                    Latitude = 12.9784,
+                    Longitude = 77.6408,
+                    SalaryMin = 3000000,
+                    SalaryMax = 5000000,
+                    SalaryPeriod = "LPA",
+                    ExperienceMin = 4,
+                    ExperienceMax = 8,
+                    JobType = "FullTime",
+                    WorkMode = "OnSite",
+                    PostedDate = DateTime.UtcNow.AddHours(-8),
+                    ApplicationUrl = "https://cred.club/careers",
+                    Skills = new List<string> { "Golang", "C#", "Kafka", "MySQL", "Distributed Systems" },
+                    IsDemoData = false
                 }
             };
 

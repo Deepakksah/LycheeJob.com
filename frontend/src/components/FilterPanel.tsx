@@ -14,6 +14,25 @@ interface FilterPanelProps {
 
 const JOB_TYPES = ['FullTime', 'PartTime', 'Contract', 'Internship', 'Freelance'];
 const WORK_MODES = ['Remote', 'Hybrid', 'OnSite'];
+const INDIAN_STATES = [
+  'Delhi NCR', 'Karnataka', 'Maharashtra', 'Telangana', 'Tamil Nadu',
+  'Uttar Pradesh', 'Gujarat', 'West Bengal', 'Kerala', 'Rajasthan',
+  'Madhya Pradesh', 'Punjab', 'Haryana', 'Bihar', 'Jharkhand', 'Odisha', 'Uttarakhand', 'Assam'
+];
+
+const ALL_CITIES = [
+  'Delhi', 'Noida', 'Gurgaon', 'Faridabad', 'Ghaziabad',
+  'Bangalore', 'Mysore', 'Mangalore',
+  'Mumbai', 'Pune', 'Nagpur', 'Navi Mumbai', 'Nashik',
+  'Hyderabad', 'Chennai', 'Coimbatore',
+  'Lucknow', 'Kanpur', 'Varanasi',
+  'Ahmedabad', 'Surat', 'Vadodara',
+  'Kolkata', 'Kochi', 'Thiruvananthapuram',
+  'Jaipur', 'Indore', 'Bhopal',
+  'Chandigarh', 'Mohali', 'Ludhiana',
+  'Patna', 'Ranchi', 'Bhubaneswar', 'Dehradun', 'Guwahati', 'Visakhapatnam'
+];
+
 const SOURCES = [
   'Google Jobs',
   'JobHai',
@@ -36,12 +55,30 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
   isOpenMobile = false,
   onCloseMobile
 }) => {
+  const [citySearch, setCitySearch] = React.useState('');
+
+  const handleStateToggle = (stateName: string) => {
+    const current = filters.states || [];
+    const updated = current.includes(stateName)
+      ? current.filter((s) => s !== stateName)
+      : [...current, stateName];
+    onChange({ ...filters, states: updated.length > 0 ? updated : undefined, page: 1 });
+  };
+
+  const handleCityToggle = (cityName: string) => {
+    const current = filters.cities || [];
+    const updated = current.includes(cityName)
+      ? current.filter((c) => c !== cityName)
+      : [...current, cityName];
+    onChange({ ...filters, cities: updated.length > 0 ? updated : undefined, city: undefined, page: 1 });
+  };
+
   const handleJobTypeChange = (type: string) => {
     const current = filters.jobTypes || [];
     const updated = current.includes(type)
       ? current.filter((t) => t !== type)
       : [...current, type];
-    onChange({ ...filters, jobTypes: updated });
+    onChange({ ...filters, jobTypes: updated, page: 1 });
   };
 
   const handleWorkModeChange = (mode: string) => {
@@ -49,7 +86,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     const updated = current.includes(mode)
       ? current.filter((m) => m !== mode)
       : [...current, mode];
-    onChange({ ...filters, workModes: updated });
+    onChange({ ...filters, workModes: updated, page: 1 });
   };
 
   const handleSourceChange = (source: string) => {
@@ -57,8 +94,12 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     const updated = current.includes(source)
       ? current.filter((s) => s !== source)
       : [...current, source];
-    onChange({ ...filters, sources: updated });
+    onChange({ ...filters, sources: updated, page: 1 });
   };
+
+  const filteredCityList = ALL_CITIES.filter(c =>
+    c.toLowerCase().includes(citySearch.toLowerCase().trim())
+  );
 
   if (!isOpenMobile) return null;
 
@@ -76,13 +117,13 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-800">
           <div className="flex items-center gap-2 font-bold text-white text-lg">
-            <Filter className="w-5 h-5 text-blue-400" />
+            <Filter className="w-5 h-5 text-rose-500" />
             <span>Advanced Filters</span>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={onClear}
-              className="text-xs text-blue-400 hover:text-blue-300 transition font-bold uppercase tracking-wider"
+              className="text-xs text-rose-400 hover:text-rose-300 transition font-bold uppercase tracking-wider"
             >
               Reset All
             </button>
@@ -92,6 +133,88 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             >
               <X className="w-5 h-5" />
             </button>
+          </div>
+        </div>
+
+        {/* 1. Multi-State / Region Filter */}
+        <div>
+          <h4 className="font-semibold text-slate-300 mb-2.5 flex items-center justify-between text-xs tracking-wider uppercase">
+            <span className="flex items-center gap-1.5">
+              <span>🏛️</span>
+              <span>State / Region</span>
+            </span>
+            {(filters.states || []).length > 0 && (
+              <span className="text-rose-400 font-bold lowercase text-[11px]">
+                {(filters.states || []).length} selected
+              </span>
+            )}
+          </h4>
+          <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1 scrollbar-thin">
+            {INDIAN_STATES.map((st) => {
+              const isSelected = (filters.states || []).includes(st);
+              return (
+                <button
+                  key={st}
+                  type="button"
+                  onClick={() => handleStateToggle(st)}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition border ${
+                    isSelected
+                      ? 'bg-rose-600 border-rose-500 text-white font-bold shadow-sm'
+                      : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700 hover:text-white'
+                  }`}
+                >
+                  {st} {isSelected && '✓'}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 2. Multi-City Selection Filter */}
+        <div>
+          <h4 className="font-semibold text-slate-300 mb-2 flex items-center justify-between text-xs tracking-wider uppercase">
+            <span className="flex items-center gap-1.5">
+              <span>📍</span>
+              <span>Multi-City Select</span>
+            </span>
+            {(filters.cities || []).length > 0 && (
+              <button
+                type="button"
+                onClick={() => onChange({ ...filters, cities: undefined, page: 1 })}
+                className="text-rose-400 hover:text-rose-300 text-[11px] font-bold"
+              >
+                Clear ({(filters.cities || []).length})
+              </button>
+            )}
+          </h4>
+
+          {/* Quick Search input for cities */}
+          <input
+            type="text"
+            placeholder="Search cities (e.g. Bangalore, Pune, Noida)..."
+            value={citySearch}
+            onChange={(e) => setCitySearch(e.target.value)}
+            className="w-full bg-slate-950 text-white placeholder-slate-500 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs mb-2 focus:border-rose-500 focus:outline-none"
+          />
+
+          <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto pr-1 scrollbar-thin">
+            {filteredCityList.map((c) => {
+              const isSelected = (filters.cities || []).includes(c) || filters.city?.toLowerCase() === c.toLowerCase();
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => handleCityToggle(c)}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition border ${
+                    isSelected
+                      ? 'bg-gradient-to-r from-rose-600 to-pink-600 border-rose-500 text-white font-bold shadow-sm'
+                      : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700 hover:text-white'
+                  }`}
+                >
+                  {c} {isSelected && '✓'}
+                </button>
+              );
+            })}
           </div>
         </div>
 

@@ -104,13 +104,24 @@ export default async function JobDetailsPage({ params }: PageProps) {
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8 space-y-6">
         
         {/* Back Link */}
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-rose-600 transition bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-xs"
-        >
-          <ArrowLeft className="w-4 h-4 text-rose-600" />
-          <span>Back to Map Search</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-rose-600 transition bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-xs"
+          >
+            <ArrowLeft className="w-4 h-4 text-rose-600" />
+            <span>Back to Map Search</span>
+          </Link>
+
+          {(job.sourceName === 'GovernmentJobs' || job.id >= 500) && (
+            <Link
+              href="/govt-jobs"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 transition px-3.5 py-2 rounded-xl border border-amber-200 shadow-xs"
+            >
+              <span>🏛️ Back to Sarkari Jobs</span>
+            </Link>
+          )}
+        </div>
 
         {/* Main Job Banner Card */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-rose-100 shadow-lg space-y-6">
@@ -139,16 +150,31 @@ export default async function JobDetailsPage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* Apply Button */}
-            <a
-              href={job.applicationUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto px-6 py-3 rounded-2xl text-sm font-bold bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white shadow-lg shadow-rose-600/30 transition flex items-center justify-center gap-2"
-            >
-              <span>Apply Now on Original Site</span>
-              <ExternalLink className="w-4 h-4" />
-            </a>
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              {job.originalUrl && (
+                <a
+                  href={job.originalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-3 rounded-2xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 shadow-xs transition flex items-center justify-center gap-1.5"
+                  title="View Official Recruitment PDF"
+                >
+                  <span>📄 Official PDF</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              )}
+
+              <a
+                href={job.applicationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 sm:flex-initial px-6 py-3 rounded-2xl text-sm font-bold bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white shadow-lg shadow-rose-600/30 transition flex items-center justify-center gap-2"
+              >
+                <span>{job.sourceName === 'GovernmentJobs' ? 'Apply on Govt Portal' : 'Apply on Original Site'}</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
           </div>
 
           {/* Quick Metrics Grid */}

@@ -18,52 +18,13 @@ namespace JobPortal.Infrastructure.JobSources
             {
                 new JobDto
                 {
-                    ExternalJobId = "li-fullstack-003",
-                    SourceName = SourceName,
-                    Title = "Full Stack Engineer (React + C#)",
-                    Company = new CompanyDto
-                    {
-                        Name = "InnoTech Innovations",
-                        LogoUrl = "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=100&h=100&fit=crop&auto=format",
-                        Website = "https://example.com/innotech",
-                        Industry = "FinTech"
-                    },
-                    Description = "We are seeking a Full Stack Engineer proficient in Next.js/React frontend and ASP.NET Core Web API backend. Experience with cloud deployments, Docker, and MySQL is preferred.",
-                    Address = "Connaught Place, Inner Circle",
-                    City = "Delhi",
-                    State = "Delhi",
-                    Country = "India",
-                    Latitude = 28.6315,
-                    Longitude = 77.2167,
-                    SalaryMin = 1400000,
-                    SalaryMax = 2200000,
-                    SalaryPeriod = "LPA",
-                    ExperienceMin = 3,
-                    ExperienceMax = 6,
-                    JobType = "FullTime",
-                    WorkMode = "Hybrid",
-                    PostedDate = DateTime.UtcNow.AddDays(-1),
-                    ContactName = "Amit Kapoor (Recruiter)",
-                    ContactPhone = "+91 99887 76655",
-                    ContactEmail = "careers@innotech.demo",
-                    InterviewDate = DateTime.UtcNow.AddDays(4),
-                    InterviewStartTime = "11:00 AM",
-                    InterviewEndTime = "03:00 PM",
-                    InterviewLocation = "Regus Plaza, Connaught Place, New Delhi",
-                    InterviewMode = "Walk-in",
-                    ApplicationUrl = "https://linkedin.com/demo-apply/fullstack-delhi",
-                    Skills = new List<string> { "React", "Next.js", "C#", "ASP.NET Core", "MySQL", "Tailwind CSS" },
-                    IsDemoData = true
-                },
-                new JobDto
-                {
                     ExternalJobId = "li-tcs-del-018",
                     SourceName = SourceName,
                     Title = "Senior Software Engineer - Cloud Systems",
                     Company = new CompanyDto
                     {
                         Name = "Tata Consultancy Services (TCS)",
-                        LogoUrl = "https://logo.clearbit.com/tcs.com",
+                        LogoUrl = "https://icon.horse/icon/tcs.com",
                         Website = "https://tcs.com",
                         Industry = "IT & Consulting"
                     },
@@ -84,14 +45,14 @@ namespace JobPortal.Infrastructure.JobSources
                     PostedDate = DateTime.UtcNow.AddHours(-5),
                     ContactName = "Rajesh Kumar (HR)",
                     ContactPhone = "+91 98111 22334",
-                    ContactEmail = "careers@tcs.demo",
+                    ContactEmail = "careers@tcs.com",
                     InterviewDate = DateTime.UtcNow.AddDays(2),
                     InterviewStartTime = "10:00 AM",
                     InterviewLocation = "TCS Saket House, New Delhi",
                     InterviewMode = "Walk-in Drive",
                     ApplicationUrl = "https://tcs.com/careers",
                     Skills = new List<string> { "C#", "ASP.NET Core", "SQL Server", "React", "Microservices" },
-                    IsDemoData = true
+                    IsDemoData = false
                 },
                 new JobDto
                 {
@@ -101,7 +62,7 @@ namespace JobPortal.Infrastructure.JobSources
                     Company = new CompanyDto
                     {
                         Name = "Zomato",
-                        LogoUrl = "https://logo.clearbit.com/zomato.com",
+                        LogoUrl = "https://icon.horse/icon/zomato.com",
                         Website = "https://zomato.com",
                         Industry = "FoodTech & Logistics"
                     },
@@ -122,7 +83,7 @@ namespace JobPortal.Infrastructure.JobSources
                     PostedDate = DateTime.UtcNow.AddHours(-3),
                     ApplicationUrl = "https://zomato.com/careers",
                     Skills = new List<string> { "React", "Next.js", "Leaflet", "Google Maps API", "TypeScript" },
-                    IsDemoData = true
+                    IsDemoData = false
                 },
                 new JobDto
                 {
@@ -132,7 +93,7 @@ namespace JobPortal.Infrastructure.JobSources
                     Company = new CompanyDto
                     {
                         Name = "Swiggy",
-                        LogoUrl = "https://logo.clearbit.com/swiggy.com",
+                        LogoUrl = "https://icon.horse/icon/swiggy.com",
                         Website = "https://swiggy.com",
                         Industry = "Consumer Tech"
                     },
@@ -157,7 +118,7 @@ namespace JobPortal.Infrastructure.JobSources
                     InterviewMode = "Walk-in Drive",
                     ApplicationUrl = "https://swiggy.com/careers",
                     Skills = new List<string> { "React", "TypeScript", "Node.js", "Go", "System Design" },
-                    IsDemoData = true
+                    IsDemoData = false
                 },
                 new JobDto
                 {
@@ -167,7 +128,7 @@ namespace JobPortal.Infrastructure.JobSources
                     Company = new CompanyDto
                     {
                         Name = "Uber",
-                        LogoUrl = "https://logo.clearbit.com/uber.com",
+                        LogoUrl = "https://icon.horse/icon/uber.com",
                         Website = "https://uber.com",
                         Industry = "Mobility & Tech"
                     },
@@ -188,7 +149,7 @@ namespace JobPortal.Infrastructure.JobSources
                     PostedDate = DateTime.UtcNow.AddHours(-12),
                     ApplicationUrl = "https://uber.com/careers",
                     Skills = new List<string> { "Go", "C++", "Geospatial", "Google Maps API", "System Architecture" },
-                    IsDemoData = true
+                    IsDemoData = false
                 },
                 new JobDto
                 {
@@ -198,7 +159,7 @@ namespace JobPortal.Infrastructure.JobSources
                     Company = new CompanyDto
                     {
                         Name = "Adobe",
-                        LogoUrl = "https://logo.clearbit.com/adobe.com",
+                        LogoUrl = "https://icon.horse/icon/adobe.com",
                         Website = "https://adobe.com",
                         Industry = "Creative Software & Cloud"
                     },
@@ -219,7 +180,7 @@ namespace JobPortal.Infrastructure.JobSources
                     PostedDate = DateTime.UtcNow.AddHours(-15),
                     ApplicationUrl = "https://adobe.com/careers",
                     Skills = new List<string> { "React", "TypeScript", "WebAssembly", "C++", "REST API" },
-                    IsDemoData = true
+                    IsDemoData = false
                 }
             };
 

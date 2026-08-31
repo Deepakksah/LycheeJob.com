@@ -55,6 +55,8 @@ export interface Job {
 export interface JobSearchFilters {
   keyword?: string;
   city?: string;
+  cities?: string[];
+  states?: string[];
   latitude?: number;
   longitude?: number;
   radiusKm?: number;

@@ -89,9 +89,32 @@ export default function AppLayoutPage() {
       ...prev,
       keyword,
       city,
+      cities: undefined,
       userLat,
       userLng,
       radiusKm,
+      page: 1
+    }));
+  };
+
+  const handleToggleCity = (cityName: string) => {
+    const current = filters.cities || [];
+    const updated = current.includes(cityName)
+      ? current.filter((c) => c !== cityName)
+      : [...current, cityName];
+    setFilters((prev) => ({
+      ...prev,
+      cities: updated.length > 0 ? updated : undefined,
+      city: undefined,
+      page: 1
+    }));
+  };
+
+  const handleClearCities = () => {
+    setFilters((prev) => ({
+      ...prev,
+      cities: undefined,
+      city: undefined,
       page: 1
     }));
   };
@@ -104,8 +127,10 @@ export default function AppLayoutPage() {
     setFilters({
       keyword: '',
       city: '',
+      cities: undefined,
+      states: undefined,
       page: 1,
-      pageSize: 25,
+      pageSize: 100,
       sortBy: 'relevance'
     });
   };
@@ -143,25 +168,28 @@ export default function AppLayoutPage() {
         savedCount={savedJobIds.length}
         initialKeyword={filters.keyword}
         initialCity={filters.city}
+        selectedCities={filters.cities || []}
         initialRadius={filters.radiusKm}
         isSidebarOpen={isSidebarOpen}
         totalJobs={totalJobs}
         onSearch={handleSearch}
+        onToggleCity={handleToggleCity}
+        onClearCities={handleClearCities}
         onRefreshJobs={handleSyncData}
         onOpenFilters={() => setIsFilterPanelOpen(true)}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
       />
 
       {/* 2. MAIN LARGE AREA MAP & JOB LIST CONTAINER */}
-      <div className="flex-1 flex overflow-hidden relative">
+      <div className="flex-1 flex min-h-0 overflow-hidden relative">
         
         {/* LEFT PANEL: JOB LIST CARDS */}
         <div
-          className={`h-full bg-white border-r border-rose-100 transition-all duration-300 flex flex-col shadow-sm ${
-            isSidebarOpen ? 'w-full lg:w-[390px] shrink-0' : 'w-0 overflow-hidden border-none'
+          className={`h-full max-h-full bg-white border-r border-rose-100 transition-all duration-300 flex flex-col shadow-sm min-h-0 ${
+            isSidebarOpen ? 'w-full lg:w-[420px] shrink-0' : 'w-0 overflow-hidden border-none'
           } ${mobileView === 'list' ? 'block' : 'hidden lg:block'}`}
         >
-          <div className="p-3 flex-1 overflow-y-auto scrollbar-thin">
+          <div className="p-3 flex-1 flex flex-col min-h-0 h-full max-h-full overflow-hidden">
             <JobList
               jobs={jobs}
               totalJobs={totalJobs}

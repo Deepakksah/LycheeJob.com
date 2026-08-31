@@ -8,6 +8,7 @@ namespace JobPortal.Infrastructure.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Job> Jobs => Set<Job>();
+        public DbSet<GovtJob> GovtJobs => Set<GovtJob>();
         public DbSet<Company> Companies => Set<Company>();
         public DbSet<JobSource> JobSources => Set<JobSource>();
         public DbSet<Skill> Skills => Set<Skill>();
@@ -65,6 +66,19 @@ namespace JobPortal.Infrastructure.Data
             modelBuilder.Entity<Job>()
                 .Property(j => j.SalaryMax)
                 .HasPrecision(18, 2);
+
+            // GovtJob Indexes
+            modelBuilder.Entity<GovtJob>()
+                .HasIndex(g => g.City);
+
+            modelBuilder.Entity<GovtJob>()
+                .HasIndex(g => g.State);
+
+            modelBuilder.Entity<GovtJob>()
+                .HasIndex(g => g.SectorCategory);
+
+            modelBuilder.Entity<GovtJob>()
+                .HasIndex(g => g.IsActive);
         }
     }
 }

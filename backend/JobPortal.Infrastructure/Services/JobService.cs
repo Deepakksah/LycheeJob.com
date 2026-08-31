@@ -57,11 +57,34 @@ namespace JobPortal.Infrastructure.Services
                 );
             }
 
-            // 2. City Search
-            if (!string.IsNullOrWhiteSpace(request.City))
+            // 2. City & Multi-City Search
+            if (request.Cities != null && request.Cities.Length > 0)
+            {
+                var cityList = request.Cities.Where(c => !string.IsNullOrWhiteSpace(c)).Select(c => c.Trim().ToLower()).ToList();
+                if (cityList.Any())
+                {
+                    query = query.Where(j => cityList.Contains(j.City.ToLower()));
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(request.City))
             {
                 string c = request.City.Trim().ToLower();
                 query = query.Where(j => j.City.ToLower().Contains(c) || j.Address.ToLower().Contains(c));
+            }
+
+            // 2.1 State & Multi-State Search
+            if (request.States != null && request.States.Length > 0)
+            {
+                var stateList = request.States.Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim().ToLower()).ToList();
+                if (stateList.Any())
+                {
+                    query = query.Where(j => stateList.Contains(j.State.ToLower()));
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(request.State))
+            {
+                string s = request.State.Trim().ToLower();
+                query = query.Where(j => j.State.ToLower().Contains(s));
             }
 
             // 3. Map Viewport Bounds Search (North, South, East, West)
@@ -207,7 +230,52 @@ namespace JobPortal.Infrastructure.Services
                 .Include(j => j.JobSkills).ThenInclude(js => js.Skill)
                 .FirstOrDefaultAsync(j => j.Id == id, cancellationToken);
 
-            return job == null ? null : MapToDto(job);
+            if (job != null) return MapToDto(job);
+
+            var govtJob = await _db.GovtJobs.FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
+            if (govtJob != null)
+            {
+                return new JobDto
+                {
+                    Id = govtJob.Id,
+                    ExternalJobId = govtJob.ExternalJobId,
+                    SourceId = 99,
+                    SourceName = "GovernmentJobs",
+                    Title = govtJob.Title,
+                    CompanyId = govtJob.Id,
+                    Company = new CompanyDto
+                    {
+                        Id = govtJob.Id,
+                        Name = govtJob.Department,
+                        LogoUrl = govtJob.LogoUrl,
+                        Website = govtJob.ApplicationUrl,
+                        Industry = govtJob.SectorCategory
+                    },
+                    Description = govtJob.Description,
+                    Address = govtJob.Address,
+                    City = govtJob.City,
+                    State = govtJob.State,
+                    Country = govtJob.Country,
+                    Latitude = govtJob.Latitude,
+                    Longitude = govtJob.Longitude,
+                    SalaryMin = govtJob.SalaryMin,
+                    SalaryMax = govtJob.SalaryMax,
+                    Currency = "INR",
+                    SalaryPeriod = "Yearly",
+                    JobType = "FullTime",
+                    WorkMode = "OnSite",
+                    PostedDate = govtJob.PostedDate,
+                    ExpiryDate = govtJob.LastDateToApply,
+                    InterviewDate = govtJob.ExamDate,
+                    InterviewMode = govtJob.SelectionMode,
+                    ApplicationUrl = govtJob.ApplicationUrl,
+                    OriginalUrl = govtJob.NotificationPdfUrl,
+                    Skills = string.IsNullOrEmpty(govtJob.Qualifications) ? new List<string>() : govtJob.Qualifications.Split(',').Select(s => s.Trim()).ToList(),
+                    CreatedAt = govtJob.CreatedAt
+                };
+            }
+
+            return null;
         }
 
         public async Task<int> SyncJobsFromAllSourcesAsync(CancellationToken cancellationToken = default)
@@ -230,11 +298,28 @@ namespace JobPortal.Infrastructure.Services
                     new JobSource { Name = "Adzuna", SourceType = "OfficialApi", IsActive = true },
                     new JobSource { Name = "RemoteOK", SourceType = "PublicFeed", IsActive = true },
                     new JobSource { Name = "Remotive", SourceType = "PublicFeed", IsActive = true },
+                    new JobSource { Name = "Arbeitnow", SourceType = "PublicFeed", IsActive = true },
+                    new JobSource { Name = "Jobicy", SourceType = "PublicFeed", IsActive = true },
+                    new JobSource { Name = "Google Jobs", SourceType = "OfficialApi", IsActive = true },
                 };
 
                 await _db.JobSources.AddRangeAsync(sources, cancellationToken);
                 await _db.SaveChangesAsync(cancellationToken);
                 activeSources = await _db.JobSources.ToListAsync(cancellationToken);
+            }
+            else
+            {
+                // Ensure any newly added providers are inserted into DB
+                foreach (var provider in _sourceProviders)
+                {
+                    if (!activeSources.Any(s => s.Name.Equals(provider.SourceName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        var newSource = new JobSource { Name = provider.SourceName, SourceType = "PublicFeed", IsActive = true };
+                        await _db.JobSources.AddAsync(newSource, cancellationToken);
+                        await _db.SaveChangesAsync(cancellationToken);
+                        activeSources.Add(newSource);
+                    }
+                }
             }
 
             foreach (var provider in _sourceProviders)
@@ -337,7 +422,7 @@ namespace JobPortal.Infrastructure.Services
                                 ApplicationUrl = dto.ApplicationUrl,
                                 OriginalUrl = dto.OriginalUrl ?? dto.ApplicationUrl,
                                 IsActive = true,
-                                IsDemoData = true,
+                                IsDemoData = dto.IsDemoData,
                                 DescriptionHash = DuplicateDetector.ComputeDescriptionHash(dto.Description),
                                 DuplicateCount = 1,
                                 CreatedAt = DateTime.UtcNow,

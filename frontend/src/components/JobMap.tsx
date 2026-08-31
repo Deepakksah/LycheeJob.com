@@ -27,11 +27,13 @@ export const JobMap: React.FC<JobMapProps> = ({
   const leafletMapRef = useRef<any>(null);
   const markersGroupRef = useRef<any>(null);
   const isInitializedRef = useRef(false);
+  const [mapReady, setMapReady] = useState(false);
   const [activeInfoWindowJob, setActiveInfoWindowJob] = useState<Job | null>(null);
   const [showSearchThisArea, setShowSearchThisArea] = useState(false);
 
   // ─── Helper: destroy existing Leaflet map safely ───────────────────────────
   const destroyMap = () => {
+    setMapReady(false);
     if (leafletMapRef.current) {
       try {
         leafletMapRef.current.off();
@@ -68,7 +70,9 @@ export const JobMap: React.FC<JobMapProps> = ({
 
         const map = L.map(mapContainerRef.current, {
           center: [center.lat, center.lng],
-          zoom,
+          zoom: Math.min(Math.max(zoom, 4), 17),
+          minZoom: 4,
+          maxZoom: 17, // Strict max zoom limit so map NEVER exceeds tile coverage
           zoomControl: false,
           preferCanvas: true, // Better performance, avoids SVG memory leaks
         });
@@ -76,7 +80,9 @@ export const JobMap: React.FC<JobMapProps> = ({
         L.tileLayer(
           'https://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
           {
-            maxZoom: 19,
+            minZoom: 4,
+            maxZoom: 17,
+            maxNativeZoom: 17,
             attribution: 'Tiles &copy; Esri',
           }
         ).addTo(map);
@@ -92,6 +98,13 @@ export const JobMap: React.FC<JobMapProps> = ({
 
         leafletMapRef.current = map;
         isInitializedRef.current = true;
+        setMapReady(true);
+
+        setTimeout(() => {
+          try {
+            map.invalidateSize();
+          } catch (_) {}
+        }, 150);
       } catch (err) {
         console.error('Leaflet map init error:', err);
       }
@@ -107,10 +120,9 @@ export const JobMap: React.FC<JobMapProps> = ({
 
   // ─── Render Markers ───────────────────────────────────────────────────────
   useEffect(() => {
-    if (!isInitializedRef.current || !leafletMapRef.current || !markersGroupRef.current) return;
+    if (!mapReady || !leafletMapRef.current || !markersGroupRef.current) return;
 
     const markersGroup = markersGroupRef.current;
-    const L = (window as any).L;
 
     // Dynamically import L only if needed
     const renderMarkers = async () => {
@@ -136,21 +148,25 @@ export const JobMap: React.FC<JobMapProps> = ({
         const isSelected = selectedJob?.id === job.id;
         const sizePx = isSelected ? 48 : 38;
 
-        const companyLogo = getExactCompanyLogoUrl(job.company.name, job.company.website, job.company.logoUrl);
-        const backupLogo = getBackupGoogleFaviconUrl(job.company.name, job.company.website);
-        const initials = job.company.name
+        const companyName = job.company?.name || 'Tech Company';
+        const companyWebsite = job.company?.website;
+        const companyLogoUrl = job.company?.logoUrl;
+        const companyLogo = getExactCompanyLogoUrl(companyName, companyWebsite, companyLogoUrl);
+        const backupLogo = getBackupGoogleFaviconUrl(companyName, companyWebsite);
+        const initials = companyName
           .split(' ')
           .map((n) => n[0])
+          .filter(Boolean)
           .join('')
           .substring(0, 2)
-          .toUpperCase();
+          .toUpperCase() || 'JB';
 
         const customHtml = `
           <div class="company-map-marker-container ${isSelected ? 'selected' : ''}">
-            <div class="company-map-marker-bubble" style="width:${sizePx}px;height:${sizePx}px;background:#fff;">
+            <div class="company-map-marker-bubble" style="width:${sizePx}px;height:${sizePx}px;background:#fff;display:flex;align-items:center;justify-content:center;">
               ${
                 companyLogo
-                  ? `<img src="${companyLogo}" alt="${job.company.name}" style="width:100%;height:100%;object-fit:contain;padding:2px;border-radius:50%;" onError="this.onerror=null;this.src='${backupLogo}';" />`
+                  ? `<img src="${companyLogo}" alt="${companyName}" style="width:100%;height:100%;object-fit:contain;padding:2px;border-radius:50%;" onError="this.onerror=function(){this.style.display='none';this.nextElementSibling.style.display='flex';};this.src='${backupLogo}';" /><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#e11d48;">${initials}</div>`
                   : `<span style="font-weight:800;font-size:11px;color:#e11d48;">${initials}</span>`
               }
             </div>
@@ -174,23 +190,32 @@ export const JobMap: React.FC<JobMapProps> = ({
         });
         markersGroup.addLayer(marker);
       });
+
+      // Auto-fit bounds on jobs change if no specific single job is manually focused
+      const validJobs = jobs.filter((j) => j.latitude && j.longitude);
+      if (validJobs.length > 0 && !selectedJob) {
+        const bounds = Leaflet.latLngBounds(validJobs.map((j) => [j.latitude!, j.longitude!]));
+        if (bounds.isValid()) {
+          leafletMapRef.current.fitBounds(bounds, { padding: [50, 50], maxZoom: 13 });
+        }
+      }
     };
 
     renderMarkers();
-  }, [jobs, selectedJob?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [jobs, selectedJob?.id, mapReady]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ─── Pan to selected job ──────────────────────────────────────────────────
+  // ─── Smooth FlyTo Selected Job ───────────────────────────────────────────
   const prevSelectedIdRef = useRef<number | null>(null);
   useEffect(() => {
     if (!leafletMapRef.current || !selectedJob?.latitude || !selectedJob?.longitude) return;
     if (prevSelectedIdRef.current !== selectedJob.id) {
       prevSelectedIdRef.current = selectedJob.id;
       try {
-        leafletMapRef.current.panTo([selectedJob.latitude, selectedJob.longitude], { animate: true });
+        leafletMapRef.current.flyTo([selectedJob.latitude, selectedJob.longitude], 14, { duration: 1.0 });
         setActiveInfoWindowJob(selectedJob);
       } catch (_) {}
     }
-  }, [selectedJob?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedJob?.id, mapReady]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearchThisArea = () => {
     if (!leafletMapRef.current || !onBoundsChange) return;
@@ -214,7 +239,7 @@ export const JobMap: React.FC<JobMapProps> = ({
       if (validJobs.length === 0) return;
       const bounds = L.latLngBounds(validJobs.map((j) => [j.latitude!, j.longitude!]));
       if (bounds.isValid()) {
-        leafletMapRef.current.fitBounds(bounds, { padding: [40, 40] });
+        leafletMapRef.current.fitBounds(bounds, { padding: [40, 40], maxZoom: 16 });
       }
     } catch (_) {}
   };

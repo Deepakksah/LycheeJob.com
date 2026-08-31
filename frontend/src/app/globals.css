@@ -85,12 +85,18 @@
 }
 
 /* Custom Scrollbar - Lychee Theme */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #f43f5e #f1f5f9;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb {
   background: #f43f5e;
@@ -98,6 +104,34 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #e11d48;
+}
+
+/* Dedicated Always-Visible Job List Scrollbar */
+.custom-job-scrollbar {
+  overflow-y: scroll !important;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin !important;
+  scrollbar-color: #e11d48 #f1f5f9 !important;
+}
+
+.custom-job-scrollbar::-webkit-scrollbar {
+  width: 7px !important;
+  display: block !important;
+}
+
+.custom-job-scrollbar::-webkit-scrollbar-track {
+  background: #f8fafc !important;
+  border-radius: 8px !important;
+}
+
+.custom-job-scrollbar::-webkit-scrollbar-thumb {
+  background: #fb7185 !important;
+  border-radius: 8px !important;
+  border: 1px solid #ffffff !important;
+}
+
+.custom-job-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #e11d48 !important;
 }
 
 /* Glassmorphism & Glowing Utilities for Lychee Theme */

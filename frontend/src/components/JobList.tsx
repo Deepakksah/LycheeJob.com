@@ -37,10 +37,10 @@ export const JobList: React.FC<JobListProps> = ({
   onOpenMobileFilters
 }) => {
   return (
-    <div className="flex flex-col h-full space-y-3">
+    <div className="flex flex-col h-full max-h-full min-h-0 space-y-2 overflow-hidden">
       
       {/* Top Header: Total Count + Mobile Filter Toggle + Sorting Dropdown */}
-      <div className="flex items-center justify-between pb-2 border-b border-rose-100 gap-2">
+      <div className="shrink-0 flex items-center justify-between pb-2 border-b border-rose-100 gap-2">
         <div className="flex items-center gap-2">
           <span className="text-base font-extrabold text-slate-900">
             <span className="text-rose-600 font-black">{totalJobs}</span> Jobs
@@ -83,27 +83,29 @@ export const JobList: React.FC<JobListProps> = ({
 
       {/* Loading Skeleton */}
       {isLoading ? (
-        <SkeletonLoader />
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <SkeletonLoader />
+        </div>
       ) : jobs.length === 0 ? (
         
         /* Empty State */
-        <div className="bg-slate-800/60 rounded-2xl p-8 border border-slate-700/80 text-center space-y-3 my-auto">
-          <div className="w-14 h-14 mx-auto rounded-full bg-slate-700/60 flex items-center justify-center text-slate-400">
-            <Briefcase className="w-7 h-7" />
+        <div className="bg-rose-50/60 rounded-2xl p-6 border border-rose-100 text-center space-y-3 my-auto">
+          <div className="w-12 h-12 mx-auto rounded-full bg-rose-100 flex items-center justify-center text-rose-600">
+            <Briefcase className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-white">No matching jobs found</h3>
-          <div className="text-xs text-slate-400 max-w-xs mx-auto space-y-1 text-left">
-            <p className="font-semibold text-slate-300 text-center mb-2">Try tweaking your search:</p>
+          <h3 className="text-sm font-bold text-slate-800">No matching jobs found</h3>
+          <div className="text-xs text-slate-500 max-w-xs mx-auto space-y-1 text-left">
+            <p className="font-semibold text-slate-700 text-center mb-1">Try tweaking your search:</p>
             <p>• Changing your keyword search term</p>
             <p>• Selecting another city (e.g. Delhi, Noida, Gurgaon)</p>
             <p>• Removing or resetting active filters</p>
-            <p>• Increasing search radius (e.g. 50 km)</p>
+            <p>• Increasing search radius</p>
           </div>
         </div>
       ) : (
         
-        /* Job Cards List */
-        <div className="flex-1 space-y-3.5 overflow-y-auto pr-1 scrollbar-thin">
+        /* Job Cards Scrollable List with Always-Visible Scrollbar */
+        <div className="flex-1 min-h-0 space-y-3 overflow-y-scroll overflow-x-hidden pr-2 custom-job-scrollbar">
           {jobs.map((job) => (
             <JobCard
               key={job.id}
@@ -119,7 +121,9 @@ export const JobList: React.FC<JobListProps> = ({
 
       {/* Pagination Footer */}
       {!isLoading && jobs.length > 0 && (
-        <Pagination pagination={pagination} onPageChange={onPageChange} />
+        <div className="shrink-0 pt-1 border-t border-rose-100">
+          <Pagination pagination={pagination} onPageChange={onPageChange} />
+        </div>
       )}
     </div>
   );

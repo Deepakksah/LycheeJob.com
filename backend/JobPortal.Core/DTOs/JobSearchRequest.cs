@@ -4,6 +4,9 @@ namespace JobPortal.Core.DTOs
     {
         public string? Keyword { get; set; }
         public string? City { get; set; }
+        public string[]? Cities { get; set; }
+        public string? State { get; set; }
+        public string[]? States { get; set; }
 
         // Geolocation / Spatial search
         public double? Latitude { get; set; }
